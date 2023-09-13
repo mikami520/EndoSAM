@@ -1,0 +1,98 @@
+train:
+  experiment_name: 'endo_sam'
+
+  # Model
+  model:
+    sam_name: 'sem_sam'
+    params:
+      # Fix the a part of parameters in SAM
+      fix_img_en: True
+      fix_prompt_en: True
+      fix_mask_de: False
+      ckpt_path: 'sam_ckpt/sam_vit_b_01ec64.pth'
+      class_num: 2 # 20 + 1
+      model_type: 'vit_b'    # type should be in [vit_h, vit_b, vit_l, default]
+
+  # Dataset
+  dataset:
+    name: 'base_sem'
+    params:
+      metainfo: {'class_names': 'instrument-clapster'}
+      dataset_dir: '/home/iu/Desktop/EndoVis/'  ## need to change to local dataset directory
+      image_set: 'train' 
+    transforms:
+      resize:
+        params:
+          size: [1024, 1024]
+      to_tensor:
+        params: ~
+    target_transforms:
+      resize:
+        params:
+          size: [1024, 1024]
+
+  # Losses
+  losses:
+    ce:
+      weight: 0.5
+      params: ~
+      label_one_hot: True
+    mse:
+      weight: 0.5
+      params: ~ # no parameters, set '~'
+      label_one_hot: True
+      
+
+  # Optimizer
+  opt_params:
+    lr_default:  1e-3
+    wd_default: 1e-4
+    momentum: ~
+    lr_list:  [ 1e-2, ]
+    group_keys: [ [ 'mask_adapter.decoder_head.output_hypernetworks_mlps', ], ]
+    wd_list:  [ 0.0, ]
+  opt_name: 'adam' # 'sgd'
+  scheduler_name: 'cosine'
+
+  # Runner
+  max_iter: 100
+  log_iter: 20
+  eval_iter: 200
+  runner_name: 'sem_runner'
+  # Dataloader  
+  bs: 8 # 8
+  num_workers: 2
+  drop_last: True
+  # Logger
+  use_tensorboard: True
+  tensorboard_folder: './experiment/tensorboard'
+  log_folder: './experiment/log'
+  model_folder: './experiment/model'
+
+val:
+  # Dataset
+  dataset:
+    name: 'base_sem'
+    params:
+      metainfo: {'class_names': 'instrument-clapster'}
+      dataset_dir: '/home/iu/Desktop/EndoVis/' ## need to change to local dataset directory
+      image_set: 'val'
+    transforms:
+      resize:
+        params:
+          size: [1024, 1024]
+      to_tensor:
+        params: ~
+    target_transforms:
+      resize:
+        params:
+          size: [1024, 1024]
+
+  bs: 8
+  num_workers: 2
+  drop_last: True
+
+
+test:
+  need_test: False
+
