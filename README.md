@@ -32,7 +32,7 @@ Click the links below to download the checkpoint for the corresponding model typ
 cd endoSAM
 python train.py --cfg ../config/finetune.yaml
 ```
-- GPU RAM Requirement
+- GPU RAM Requirement\
 Even though this is the fine-tune work, it requires a large GPU RAM. **Use suitable batch size based on the VRAM you have**
     - Batch Size 1 -> 6 GB RAM
     - Batch Size 2 -> 14 GB RAM
