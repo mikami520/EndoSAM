@@ -1,0 +1,47 @@
+experiment_name: 'EndoSAM'
+
+# Model
+model:
+  class_num: 2 # 20 + 1
+  model_customized: True
+  model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
+  model_name: 'sam_vit_h_4b8939.pth'
+  encoder_size: 1024  
+
+# Dataset
+dataset:
+    class_names: ['background', instrument-clapster']
+    dataset_dir: '/home/iu/Desktop/EndoVis/all_data'
+    img_format: 'jpg'
+    ann_format: 'png'
+
+# Losses
+losses:
+  ce:
+    weight: 0.5
+    params: ~
+    label_one_hot: True
+  mse:
+    weight: 0.5
+    params: ~ # no parameters, set '~'
+    label_one_hot: True
+    
+
+# Optimizer
+opt_params:
+  lr_default:  1e-4
+
+# Runner
+max_iter: 1
+val_iter: 25
+# Dataloader  
+train_bs: 16 # 8
+val_bs: 32 # 8
+num_workers: 2
+num_token: 4
+
+# Logger
+log_folder: '../experiment/log'
+model_folder: '../experiment/model'
+
+
