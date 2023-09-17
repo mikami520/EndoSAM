@@ -9,6 +9,15 @@ from torchvision.transforms.functional import resize, to_pil_image  # type: igno
 from copy import deepcopy
 from typing import Tuple
 
+def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses, val_values, save_dir):
+    torch.save({
+                'epoch': epoch,
+                'best_val_iou': best_val_iou,
+                'train_losses': train_losses,
+                'val_values': val_values,
+                'endosam_state_dict': adapter_model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+            }, save_dir)
 
 def one_hot_embedding_3d(labels, class_num=21):
     '''

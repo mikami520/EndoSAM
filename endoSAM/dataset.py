@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-16 22:19:32
+LastEditTime: 2023-09-17 03:38:19
 FilePath: /EndoSAM/endoSAM/dataset.py
 Description: 
 I Love IU
@@ -63,7 +63,8 @@ class EndoVisDataset(Dataset):
         input_image = self.transform.apply_image(img)
         input_image_torch = torch.as_tensor(input_image).permute(2, 0, 1).contiguous()
         img = preprocess(input_image_torch, self.encoder_size)
-        ann = cv2.imread(self.anns[index], cv2.IMREAD_GRAYSCALE)
+        ann_path = os.path.join(self.ann_mode_path, f"{os.path.basename(self.imgs[index]).split('.')[0]}.{self.ann_format}")
+        ann = cv2.imread(ann_path, cv2.IMREAD_GRAYSCALE)
         ann = np.array(ann)
         ann[ann != 0] = 255
         

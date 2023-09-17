@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-16 21:37:45
+LastEditTime: 2023-09-17 03:32:20
 FilePath: /EndoSAM/endoSAM/model.py
 Description: EndoSAM adapter 
 I Love IU
@@ -28,33 +28,43 @@ class EndoSAMAdapter(nn.Module):
         self.sam_mask_encoder = sam_mask_encoder.to(self.device)
         self.sam_prompt_encoder = sam_prompt_encoder.to(self.device)
         self.sam_mask_decoder = sam_mask_decoder.to(self.device)
-        self.protoype_prompt_encoder = Prototype_Prompt_Encoder(feat_dim=256, 
+        self.prototype_prompt_encoder = Prototype_Prompt_Encoder(feat_dim=256, 
                                                             hidden_dim_dense=128, 
                                                             hidden_dim_sparse=128, 
                                                             size=64, 
                                                             num_tokens=self.num_token).to(self.device)
+        self.learnable_prototypes_model = Learnable_Prototypes(num_classes=self.num_classes, feat_dim = 256).to(self.device)
+        self.prototypes = self.learnable_prototypes_model()
         self.sam_mask_encoder.to(self.device)
         self.sam_prompt_encoder.to(self.device)
         self.sam_mask_decoder.to(self.device)
-            
+        
+        for _, param in self.prototype_prompt_encoder.named_parameters():
+            param.requires_grad = True
+        
+        for _, param in self.learnable_prototypes_model.named_parameters():
+            param.requires_grad = True
+        
+        for _, param in self.sam_mask_decoder.named_parameters():
+            param.requires_grad = True
+        
         for _, param in self.sam_mask_encoder.named_parameters():
             param.requires_grad = False
         
         for _, param in self.sam_prompt_encoder.named_parameters():
             param.requires_grad = False
 
-        self.cli_ids = torch.tensor(1).to(self.device)
 
-    def forward(self, prototypes, x):
+    def forward(self, x):
         sam_features = self.sam_mask_encoder(x)
-        sam_features = rearrange(sam_features, 'b h w c -> b (h w) c')
-        dense_embeddings, sparse_embeddings = self.prototype_prompt_encoder(sam_features, prototypes, self.cls_ids, self.num_classes-1)
+        sam_features = rearrange(sam_features, 'b c h w -> b (h w) c')
+        cls_ids = torch.tensor(1).repeat(sam_features.shape[0]).to(self.device)
+        dense_embeddings, sparse_embeddings = self.prototype_prompt_encoder(sam_features, self.prototypes, cls_ids, self.num_classes)
         pred = []
         pred_quality = []
-        sam_feats = rearrange(sam_features,'b (h w) c -> b c h w', h=64, w=64)
+        sam_features = rearrange(sam_features,'b (h w) c -> b c h w', h=64, w=64)
     
-        for dense_embedding, sparse_embedding, features_per_image in zip(dense_embeddings.unsqueeze(1), sparse_embeddings.unsqueeze(1), sam_feats):    
-            
+        for dense_embedding, sparse_embedding, features_per_image in zip(dense_embeddings.unsqueeze(1), sparse_embeddings.unsqueeze(1), sam_features):    
             low_res_masks_per_image, mask_quality_per_image = self.sam_mask_decoder(
                     image_embeddings=features_per_image.unsqueeze(0),
                     image_pe=self.sam_prompt_encoder.get_dense_pe(), 
@@ -71,9 +81,12 @@ class EndoSAMAdapter(nn.Module):
             
             pred.append(pred_per_image)
             pred_quality.append(mask_quality_per_image)
-            
-        pred = torch.cat(pred,dim=0).squeeze(1)
-        pred_quality = torch.cat(pred_quality,dim=0).squeeze(1)
+        
+        pred = torch.cat(pred, dim=0)
+        pred_quality = torch.cat(pred_quality,dim=0)
+        pred = (pred>0).int()
+        pred = pred.to(torch.float32)
+        pred = torch.cat((torch.zeros_like(pred, dtype=torch.float32, requires_grad=True), pred), dim=1)
         return pred, pred_quality
 
 class Prototype_Prompt_Encoder(nn.Module):
@@ -105,25 +118,23 @@ class Prototype_Prompt_Encoder(nn.Module):
 
         
         feat = torch.stack([feat for _ in range(cls_prompts.size(1))], dim=1)
-
         # compute similarity matrix 
         sim = torch.matmul(feat, cls_prompts)
         
         # compute class-activated feature
         feat =  feat + feat*sim
-
         feat_sparse = feat.clone()
         
         # compute dense embeddings
-        one_hot = torch.nn.functional.one_hot(cls_ids-1,num_classes) 
-        feat = feat[one_hot ==1]
-        feat = rearrange(feat,'b (h w) c -> b c h w', h=64, w=64)
+        one_hot = torch.nn.functional.one_hot(cls_ids-1,num_classes)
+        feat = feat[one_hot == 1]
+        feat = rearrange(feat.squeeze(1),'b (h w) c -> b c h w', h=64, w=64)
         dense_embeddings = self.dense_fc_2(self.relu(self.dense_fc_1(feat)))
         
         # compute sparse embeddings
         feat_sparse = rearrange(feat_sparse,'b num_cls hw c -> (b num_cls) hw c')
         sparse_embeddings = self.sparse_fc_2(self.relu(self.sparse_fc_1(feat_sparse)))
-        sparse_embeddings = rearrange(sparse_embeddings,'(b num_cls) n c -> b num_cls n c', num_cls=7)
+        sparse_embeddings = rearrange(sparse_embeddings,'(b num_cls) n c -> b num_cls n c', num_cls=1)
         
         pos_embed = self.pn_cls_embeddings[1].weight.unsqueeze(0).unsqueeze(0) * one_hot.unsqueeze(-1).unsqueeze(-1)
         neg_embed = self.pn_cls_embeddings[0].weight.unsqueeze(0).unsqueeze(0) * (1-one_hot).unsqueeze(-1).unsqueeze(-1)

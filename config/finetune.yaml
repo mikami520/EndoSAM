@@ -2,7 +2,7 @@ experiment_name: 'EndoSAM'
 
 # Model
 model:
-  class_num: 2 # 20 + 1
+  class_num: 1 # 20 + 1
   model_customized: True
   model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
   model_name: 'sam_vit_h_4b8939.pth'
@@ -19,12 +19,8 @@ dataset:
 losses:
   ce:
     weight: 0.5
-    params: ~
-    label_one_hot: True
   mse:
     weight: 0.5
-    params: ~ # no parameters, set '~'
-    label_one_hot: True
     
 
 # Optimizer
@@ -32,16 +28,17 @@ opt_params:
   lr_default:  1e-4
 
 # Runner
-max_iter: 1
+max_iter: 10000
 val_iter: 25
 # Dataloader  
 train_bs: 16 # 8
-val_bs: 32 # 8
-num_workers: 2
+val_bs: 16 # 8
+num_workers: 24
 num_token: 4
 
 # Logger
 log_folder: '../experiment/log'
 model_folder: '../experiment/model'
+ckpt_folder: '../experiment/checkpoint'
 
 
