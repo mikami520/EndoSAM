@@ -11,7 +11,7 @@
 # EndoSAM
 Fine-tune for endoscope clapster 
 
-## Installation
+## Installation (tested on Ubuntu 20.04.6 LTS x86_64)
 ```
 git clone https://github.com/mikami520/EndoSAM.git
 cd EndoSAM
@@ -31,4 +31,8 @@ Click the links below to download the checkpoint for the corresponding model typ
 ```
 cd endoSAM
 python train.py --cfg ../config/finetune.yaml
-``` 
+```
+- GPU RAM Requirement
+Even though this is the fine-tune work, it requires a large GPU RAM. **Use suitable batch size based on the VRAM you have**
+    - Batch Size 1 -> 6 GB RAM
+    - Batch Size 2 -> 14 GB RAM
