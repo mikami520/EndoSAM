@@ -2,9 +2,9 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-17 03:32:20
+LastEditTime: 2023-09-18 17:08:44
 FilePath: /EndoSAM/endoSAM/model.py
-Description: EndoSAM adapter 
+Description: EndoSAM model adapter 
 I Love IU
 Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 '''

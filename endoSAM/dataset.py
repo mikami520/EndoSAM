@@ -2,9 +2,9 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-17 03:38:19
+LastEditTime: 2023-09-18 17:11:59
 FilePath: /EndoSAM/endoSAM/dataset.py
-Description: 
+Description: EndoVisDataset class
 I Love IU
 Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 '''

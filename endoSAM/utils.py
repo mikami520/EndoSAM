@@ -1,3 +1,14 @@
+'''
+Author: Chris Xiao yl.xiao@mail.utoronto.ca
+Date: 2023-09-16 19:47:31
+LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-09-18 17:11:24
+FilePath: /EndoSAM/endoSAM/utils.py
+Description: EndoSAM utilities functions 
+I Love IU
+Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
+'''
+
 import os
 import numpy as np
 import shutil
@@ -53,9 +64,9 @@ def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses,
                 'optimizer': optimizer.state_dict(),
             }, save_dir)
 
+
 def one_hot_embedding_3d(labels, class_num=21):
     '''
-
     :param real_labels: B H W
     :param class_num: N
     :return: B N H W
@@ -79,6 +90,7 @@ def setup_logger(logger_name, log_file, level=logging.INFO):
         log_setup.addHandler(streamHandler)
     
     return log_setup
+
 
 def make_if_dont_exist(folder_path, overwrite=False):
     if os.path.exists(folder_path):
@@ -120,6 +132,7 @@ def postprocess_masks(masks, input_size, original_size):
     masks = F.interpolate(masks, original_size, mode="bilinear", align_corners=False)
     return masks
 
+
 def preprocess(x: torch.Tensor, img_size: int) -> torch.Tensor:
         """Normalize pixel values and pad to a square input."""
         # Normalize colors
@@ -135,6 +148,7 @@ def preprocess(x: torch.Tensor, img_size: int) -> torch.Tensor:
         padw = img_size - w
         x = F.pad(x, (0, padw, 0, padh))
         return x
+
 
 class ResizeLongestSide:
     """
