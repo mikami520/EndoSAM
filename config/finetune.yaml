@@ -40,5 +40,6 @@ num_token: 4
 log_folder: '../experiment/log'
 model_folder: '../experiment/model'
 ckpt_folder: '../experiment/checkpoint'
+plot_folder: '../experiment/plots'
 
 

@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 18:21:41
-LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-17 03:36:56
+LastEditors: mikami520 yxiao39@jh.edu
+LastEditTime: 2023-09-18 11:34:22
 FilePath: /EndoSAM/endoSAM/loss.py
 Description: loss functions
 I Love IU
@@ -21,5 +21,5 @@ def ce_loss(gt, pred):
     return ce(pred, gt)
 
 def jaccard(gt, pred):
-    jaccard = JaccardIndex(task='multiclass', num_classes=2).to(pred.device)
+    jaccard = JaccardIndex(task='multiclass', num_classes=2, average='micro').to(pred.device)
     return jaccard(pred, gt)

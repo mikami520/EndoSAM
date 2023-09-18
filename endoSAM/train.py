@@ -1,8 +1,8 @@
 '''
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2023-09-11 18:27:02
-LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-17 03:38:55
+LastEditors: mikami520 yxiao39@jh.edu
+LastEditTime: 2023-09-18 11:35:10
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -16,10 +16,10 @@ from omegaconf import OmegaConf
 from torch.utils.data import DataLoader
 import os
 from dataset import EndoVisDataset
-from utils import make_if_dont_exist, setup_logger, one_hot_embedding_3d, save_checkpoint
+from utils import make_if_dont_exist, setup_logger, one_hot_embedding_3d, save_checkpoint, plot_progress
 import datetime
 import torch
-from model import EndoSAMAdapter, Learnable_Prototypes
+from model import EndoSAMAdapter
 import numpy as np
 from segment_anything.build_sam import sam_model_registry
 from loss import ce_loss, mse_loss, jaccard
@@ -28,12 +28,15 @@ from loss import ce_loss, mse_loss, jaccard
 def parse_command():
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg', default=None, type=str, help='path to config file')
+    parser.add_argument('--resume', action='store_true', help='use this if you want to continue a training')
     args = parser.parse_args()
     return args
 
 if __name__ == '__main__':
     args = parse_command()
     cfg = args.cfg
+    resume = args.resume
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if cfg is not None:
         if os.path.exists(cfg):
             cfg = OmegaConf.load(cfg)
@@ -49,17 +52,20 @@ if __name__ == '__main__':
     model_path = os.path.join(cfg.model_folder)
     log_path = os.path.join(cfg.log_folder)
     ckpt_path = os.path.join(cfg.ckpt_folder)
+    plot_path = os.path.join(cfg.plot_folder)
     model_exp_path = os.path.join(model_path, exp)
     log_exp_path = os.path.join(log_path, exp)
     ckpt_exp_path = os.path.join(ckpt_path, exp)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    plot_exp_path = os.path.join(plot_path, exp)
     
     make_if_dont_exist(model_path)
     make_if_dont_exist(log_path)
     make_if_dont_exist(ckpt_path)
+    make_if_dont_exist(plot_path)
     make_if_dont_exist(model_exp_path)
     make_if_dont_exist(log_exp_path)
     make_if_dont_exist(ckpt_exp_path)
+    make_if_dont_exist(plot_exp_path)
     
     datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
     logger = setup_logger(f'EndoSAM', os.path.join(log_exp_path, datetime_object))
@@ -73,7 +79,7 @@ if __name__ == '__main__':
 
     logger.info("Load Model-Specific Parameters")
     sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../ckpt/sam/{cfg.model.model_name}',customized=cfg.model.model_customized)
-    model = EndoSAMAdapter(device, cfg.model.class_num, sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder, num_token=cfg.num_token)
+    model = EndoSAMAdapter(device, cfg.model.class_num, sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder, num_token=cfg.num_token).to(device)
     lr = cfg.opt_params.lr_default
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     train_losses = []
@@ -81,13 +87,24 @@ if __name__ == '__main__':
     best_val_iou = -np.inf
     max_iter = cfg.max_iter
     val_iter = cfg.val_iter
+    start_epoch = 0
+    if resume:
+        ckpt = torch.load(os.path.join(ckpt_exp_path, 'ckpt.pth'), map_location=device)
+        optimizer.load_state_dict(ckpt['optimizer'])
+        model.load_state_dict(ckpt['weights'])
+        best_val_iou = ckpt['best_val_iou']
+        train_losses = ckpt['train_losses']
+        val_values = ckpt['val_values']
+        lr = optimizer.param_groups[0]['lr']
+        start_epoch = ckpt['epoch'] + 1
+        logger.info("Resume Training")
+    else:
+        logger.info("Start Training")
     
-    logger.info("Start Training")
-    for epoch in range(cfg.max_iter):
+    for epoch in range(start_epoch, cfg.max_iter):
         logger.info(f"Epoch {epoch+1}/{cfg.max_iter}:")
         losses = []
         model.train()
-        step = 0
         for img, ann in train_loader:
             img = img.to(device)
             ann = ann.to(device).long()
@@ -98,7 +115,6 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
-            step += 1
         
         avg_loss = np.mean(losses, axis=0)
         logger.info(f"\ttraining loss: {avg_loss}")
@@ -129,9 +145,10 @@ if __name__ == '__main__':
                     'val_values': val_values,
                     'endosam_state_dict': model.state_dict(),
                     'optimizer': optimizer.state_dict(),
-                }, os.path.join(model_exp_path, 'best_model.pth'))
-        save_dir = os.path.join(ckpt_exp_path, 'latest_checkpoint.pth')
+                }, os.path.join(model_exp_path, 'model.pth'))
+        save_dir = os.path.join(ckpt_exp_path, 'ckpt.pth')
         save_checkpoint(model, optimizer, epoch, best_val_iou, train_losses, val_values, save_dir)
+        plot_progress(logger, plot_exp_path, train_losses, val_values, 'loss')
     
     
     

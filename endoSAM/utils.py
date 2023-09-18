@@ -7,7 +7,41 @@ import torch
 import torch.nn as nn
 from torchvision.transforms.functional import resize, to_pil_image  # type: ignore
 from copy import deepcopy
+import matplotlib.pyplot as plt
 from typing import Tuple
+import matplotlib
+
+
+def plot_progress(logger, save_dir, train_loss, val_loss, name):
+    """
+    Should probably by improved
+    :return:
+    """
+    assert len(train_loss) != 0
+    train_loss = np.array(train_loss)
+    try:
+        font = {'weight': 'normal',
+                'size': 18}
+
+        matplotlib.rc('font', **font)
+
+        fig = plt.figure(figsize=(30, 24))
+        ax = fig.add_subplot(111)
+        ax.plot(train_loss[:,0], train_loss[:,1], color='b', ls='-', label="loss_tr")
+        if len(val_loss) != 0:
+            val_loss = np.array(val_loss)
+            ax.plot(val_loss[:, 0], val_loss[:, 1], color='r', ls='-', label="loss_val")
+
+        ax.set_xlabel("epoch")
+        ax.set_ylabel("loss")
+        ax.legend()
+        ax.set_title(name)
+        fig.savefig(os.path.join(save_dir, name + ".png"))
+        plt.cla()
+        plt.close(fig)
+    except:
+        logger.info(f"failed to plot {name} training progress")
+
 
 def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses, val_values, save_dir):
     torch.save({
@@ -15,7 +49,7 @@ def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses,
                 'best_val_iou': best_val_iou,
                 'train_losses': train_losses,
                 'val_values': val_values,
-                'endosam_state_dict': adapter_model.state_dict(),
+                'weights': adapter_model.state_dict(),
                 'optimizer': optimizer.state_dict(),
             }, save_dir)
 
@@ -49,7 +83,7 @@ def setup_logger(logger_name, log_file, level=logging.INFO):
 def make_if_dont_exist(folder_path, overwrite=False):
     if os.path.exists(folder_path):
         if not overwrite:
-            print(f'{folder_path} exists.')
+            print(f'{folder_path} exists, no overwrite here.')
         else:
             print(f"{folder_path} overwritten")
             shutil.rmtree(folder_path, ignore_errors = True)
