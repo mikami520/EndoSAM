@@ -1,12 +1,12 @@
 '''
-Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
-LastEditors: mikami520 yxiao39@jh.edu
-LastEditTime: 2023-09-18 11:35:10
+LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-09-18 17:06:21
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
-Copyright (c) 2023 by error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git, All Rights Reserved. 
+Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 '''
 '''
 @copyright Chris Xiao yl.xiao@mail.utoronto.ca
