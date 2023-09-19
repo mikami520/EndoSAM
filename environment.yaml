@@ -126,4 +126,3 @@ dependencies:
       - tzdata==2023.3
       - urllib3==1.26.16
       - werkzeug==2.3.7
-prefix: /home/iu/anaconda3/envs/sam
