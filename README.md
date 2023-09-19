@@ -18,6 +18,12 @@ cd EndoSAM
 conda env create -f environment.yaml
 conda activate sam
 ```
+If conda cannot install successfully, try
+ ```
+conda create -y -n sam python=3.10.11
+conda activate sam
+pip install -r requirements.txt
+```
 
 ## Usage
 - Download the SAM model checkpoint and place it into ```ckpt/sam```
