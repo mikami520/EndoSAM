@@ -25,14 +25,14 @@ losses:
 
 # Optimizer
 opt_params:
-  lr_default:  1e-3
+  lr_default:  1e-4
 
 # Runner
-max_iter: 10
+max_iter: 50
 val_iter: 5
 # Dataloader  
-train_bs: 4 # 8
-val_bs: 4 # 8
+train_bs: 2 # 8
+val_bs: 2 # 8
 num_workers: 16
 num_token: 8
 

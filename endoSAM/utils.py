@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 19:26:40
+LastEditTime: 2023-09-27 19:28:24
 FilePath: /EndoSAM/endoSAM/utils.py
 Description: EndoSAM utilities functions 
 I Love IU
@@ -67,7 +67,7 @@ def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses,
 
 def one_hot_embedding_3d(labels, dim=1, class_num=21):
     '''
-    :param real_labels: B H W
+    :param real_labels: B 1 H W
     :param class_num: N
     :return: B N H W
     '''
