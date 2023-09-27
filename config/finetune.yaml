@@ -25,16 +25,16 @@ losses:
 
 # Optimizer
 opt_params:
-  lr_default:  1e-4
+  lr_default:  1e-3
 
 # Runner
-max_iter: 10000
-val_iter: 25
+max_iter: 10
+val_iter: 5
 # Dataloader  
-train_bs: 16 # 8
-val_bs: 16 # 8
-num_workers: 24
-num_token: 4
+train_bs: 4 # 8
+val_bs: 4 # 8
+num_workers: 16
+num_token: 8
 
 # Logger
 log_folder: '../experiment/log'

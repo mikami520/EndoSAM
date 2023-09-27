@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-18 17:06:21
+LastEditTime: 2023-09-19 14:23:23
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -58,14 +58,15 @@ if __name__ == '__main__':
     ckpt_exp_path = os.path.join(ckpt_path, exp)
     plot_exp_path = os.path.join(plot_path, exp)
     
-    make_if_dont_exist(model_path)
-    make_if_dont_exist(log_path)
-    make_if_dont_exist(ckpt_path)
-    make_if_dont_exist(plot_path)
-    make_if_dont_exist(model_exp_path)
-    make_if_dont_exist(log_exp_path)
-    make_if_dont_exist(ckpt_exp_path)
-    make_if_dont_exist(plot_exp_path)
+    if not resume:
+        make_if_dont_exist(model_path, overwrite=True)
+        make_if_dont_exist(log_path, overwrite=True)
+        make_if_dont_exist(ckpt_path, overwrite=True)
+        make_if_dont_exist(plot_path, overwrite=True)
+        make_if_dont_exist(model_exp_path, overwrite=True)
+        make_if_dont_exist(log_exp_path, overwrite=True)
+        make_if_dont_exist(ckpt_exp_path, overwrite=True)
+        make_if_dont_exist(plot_exp_path, overwrite=True)
     
     datetime_object = 'training_log_' + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '.log'
     logger = setup_logger(f'EndoSAM', os.path.join(log_exp_path, datetime_object))
@@ -115,7 +116,7 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             losses.append(loss.item())
-        
+
         avg_loss = np.mean(losses, axis=0)
         logger.info(f"\ttraining loss: {avg_loss}")
         train_losses.append([epoch+1, avg_loss])

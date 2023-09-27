@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-18 17:11:59
+LastEditTime: 2023-09-19 12:30:07
 FilePath: /EndoSAM/endoSAM/dataset.py
 Description: EndoVisDataset class
 I Love IU
@@ -60,12 +60,13 @@ class EndoVisDataset(Dataset):
     
     def __getitem__(self, index) -> tuple:
         img = cv2.imread(self.imgs[index])
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        name = os.path.basename(self.imgs[index]).split('.')[0]
         input_image = self.transform.apply_image(img)
         input_image_torch = torch.as_tensor(input_image).permute(2, 0, 1).contiguous()
         img = preprocess(input_image_torch, self.encoder_size)
-        ann_path = os.path.join(self.ann_mode_path, f"{os.path.basename(self.imgs[index]).split('.')[0]}.{self.ann_format}")
+        ann_path = os.path.join(self.ann_mode_path, f"{name}.{self.ann_format}")
         ann = cv2.imread(ann_path, cv2.IMREAD_GRAYSCALE)
         ann = np.array(ann)
         ann[ann != 0] = 255
-        
         return img, ann
