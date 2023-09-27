@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-19 12:30:07
+LastEditTime: 2023-09-27 19:26:18
 FilePath: /EndoSAM/endoSAM/dataset.py
 Description: EndoVisDataset class
 I Love IU
@@ -68,5 +68,6 @@ class EndoVisDataset(Dataset):
         ann_path = os.path.join(self.ann_mode_path, f"{name}.{self.ann_format}")
         ann = cv2.imread(ann_path, cv2.IMREAD_GRAYSCALE)
         ann = np.array(ann)
-        ann[ann != 0] = 255
+        ann[ann != 0] = 1
+        
         return img, ann

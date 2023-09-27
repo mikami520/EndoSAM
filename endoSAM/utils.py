@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-19 12:17:31
+LastEditTime: 2023-09-27 19:26:40
 FilePath: /EndoSAM/endoSAM/utils.py
 Description: EndoSAM utilities functions 
 I Love IU
@@ -65,15 +65,19 @@ def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses,
             }, save_dir)
 
 
-def one_hot_embedding_3d(labels, class_num=21):
+def one_hot_embedding_3d(labels, dim=1, class_num=21):
     '''
     :param real_labels: B H W
     :param class_num: N
     :return: B N H W
     '''
     one_hot_labels = labels.clone()
-    one_hot_labels[one_hot_labels == 255] = 0 # 0 is background
-    return F.one_hot(one_hot_labels, num_classes=class_num).permute(0, 3, 1, 2).contiguous().float()
+    data_dim = list(one_hot_labels.shape)
+    if data_dim[dim] != 1:
+        raise AssertionError("labels should have a channel with length equal to one.")
+    data_dim[dim] = class_num
+    o = torch.zeros(size=data_dim, dtype=one_hot_labels.dtype, device=one_hot_labels.device)
+    return o.scatter_(dim, one_hot_labels, 1).contiguous().float()
 
 
 def setup_logger(logger_name, log_file, level=logging.INFO):
