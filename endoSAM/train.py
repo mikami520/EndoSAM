@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
-LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-18 17:06:21
+LastEditors: mikami520 yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-09-27 18:05:39
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -107,7 +107,7 @@ if __name__ == '__main__':
         model.train()
         for img, ann in train_loader:
             img = img.to(device)
-            ann = ann.to(device).long()
+            ann = ann.to(device).unsqueeze(1).long()
             ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num+1)
             optimizer.zero_grad()
             pred, pred_quality = model(img)
@@ -126,7 +126,7 @@ if __name__ == '__main__':
             with torch.no_grad():
                 for img, ann in valid_loader:
                     img = img.to(device)
-                    ann = ann.to(device).long()
+                    ann = ann.to(device).unsqueeze(1).long()
                     ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num+1)
                     pred, pred_quality = model(img)
                     iou = jaccard(ann, pred)
