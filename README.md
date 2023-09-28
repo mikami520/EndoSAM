@@ -42,4 +42,4 @@ Even though this is the fine-tune work, it requires a large GPU RAM. **Use suita
     - Batch Size 1 -> 6 GB RAM
     - Batch Size 2 -> 12 GB RAM
     - Batch Size 4 -> 21 GB RAM
-    - Batch Size 8 -> 32 GB RAM
+    - Batch Size 8 -> 33 GB RAM
