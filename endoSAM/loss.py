@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 18:21:41
-LastEditors: mikami520 yxiao39@jh.edu
-LastEditTime: 2023-09-18 11:34:22
+LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-09-27 21:06:26
 FilePath: /EndoSAM/endoSAM/loss.py
 Description: loss functions
 I Love IU

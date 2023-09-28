@@ -2,7 +2,7 @@ experiment_name: 'EndoSAM'
 
 # Model
 model:
-  class_num: 1 # 20 + 1
+  class_num: 2 # 20 + 1
   model_customized: True
   model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
   model_name: 'sam_vit_h_4b8939.pth'
@@ -31,8 +31,8 @@ opt_params:
 max_iter: 50
 val_iter: 5
 # Dataloader  
-train_bs: 2 # 8
-val_bs: 2 # 8
+train_bs: 4 # 8
+val_bs: 4 # 8
 num_workers: 16
 num_token: 8
 

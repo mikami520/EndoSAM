@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 19:26:34
+LastEditTime: 2023-09-27 21:08:26
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -109,7 +109,7 @@ if __name__ == '__main__':
         for img, ann in train_loader:
             img = img.to(device)
             ann = ann.to(device).unsqueeze(1).long()
-            ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num+1)
+            ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
             optimizer.zero_grad()
             pred, pred_quality = model(img)
             loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                 for img, ann in valid_loader:
                     img = img.to(device)
                     ann = ann.to(device).unsqueeze(1).long()
-                    ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num+1)
+                    ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
                     pred, pred_quality = model(img)
                     iou = jaccard(ann, pred)
                     ious.append(iou.item())

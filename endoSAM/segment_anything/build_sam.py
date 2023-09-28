@@ -142,7 +142,7 @@ def _build_customized_sam(encoder_embed_dim,
     )
     
     mask_decoder=MaskDecoder(
-        num_multimask_outputs=3,
+        num_multimask_outputs=2,
         transformer=TwoWayTransformer(
             depth=2,
             embedding_dim=prompt_embed_dim,
@@ -171,9 +171,9 @@ def _build_customized_sam(encoder_embed_dim,
         image_encoder_state_dict = {k.split("image_encoder.")[-1]: v for k, v in state_dict.items() if k.startswith("image_encoder")}
         image_encoder.load_state_dict(image_encoder_state_dict)
         
-        # only filter the weight of the mask_decoder
-        decoder_state_dict = {k.split("mask_decoder.")[-1]: v for k, v in state_dict.items() if k.startswith("mask_decoder")}
-        mask_decoder.load_state_dict(decoder_state_dict)
+        # # only filter the weight of the mask_decoder
+        # decoder_state_dict = {k.split("mask_decoder.")[-1]: v for k, v in state_dict.items() if k.startswith("mask_decoder")}
+        # mask_decoder.load_state_dict(decoder_state_dict)
         
         # only  filter the weight of the prompt_encoder
         prompt_encoder_state_dict = {k.split("prompt_encoder.")[-1]: v for k, v in state_dict.items() if k.startswith("prompt_encoder")}

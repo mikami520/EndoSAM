@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-18 17:08:44
+LastEditTime: 2023-09-27 21:07:27
 FilePath: /EndoSAM/endoSAM/model.py
 Description: EndoSAM model adapter 
 I Love IU
@@ -23,7 +23,7 @@ class EndoSAMAdapter(nn.Module):
                  ):
         super(EndoSAMAdapter, self).__init__()
         self.device = device
-        self.num_classes = num_classes
+        self.num_classes = num_classes - 1
         self.num_token = num_token
         self.sam_mask_encoder = sam_mask_encoder.to(self.device)
         self.sam_prompt_encoder = sam_prompt_encoder.to(self.device)
@@ -63,16 +63,14 @@ class EndoSAMAdapter(nn.Module):
         pred = []
         pred_quality = []
         sam_features = rearrange(sam_features,'b (h w) c -> b c h w', h=64, w=64)
-    
         for dense_embedding, sparse_embedding, features_per_image in zip(dense_embeddings.unsqueeze(1), sparse_embeddings.unsqueeze(1), sam_features):    
             low_res_masks_per_image, mask_quality_per_image = self.sam_mask_decoder(
                     image_embeddings=features_per_image.unsqueeze(0),
                     image_pe=self.sam_prompt_encoder.get_dense_pe(), 
                     sparse_prompt_embeddings=sparse_embedding,
                     dense_prompt_embeddings=dense_embedding, 
-                    multimask_output=False,
+                    multimask_output=True,
                 )
-
             pred_per_image = postprocess_masks(
                 low_res_masks_per_image,
                 input_size=(819, 1024),
@@ -84,9 +82,6 @@ class EndoSAMAdapter(nn.Module):
         
         pred = torch.cat(pred, dim=0)
         pred_quality = torch.cat(pred_quality,dim=0)
-        pred = (pred>0).int()
-        pred = pred.to(torch.float32)
-        pred = torch.cat((torch.zeros_like(pred, dtype=torch.float32, requires_grad=True), pred), dim=1)
         return pred, pred_quality
 
 class Prototype_Prompt_Encoder(nn.Module):
