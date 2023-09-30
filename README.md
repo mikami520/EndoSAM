@@ -2,7 +2,7 @@
  * @Author: Chris Xiao yl.xiao@mail.utoronto.ca
  * @Date: 2023-09-12 22:10:18
  * @LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
- * @LastEditTime: 2023-09-30 17:26:27
+ * @LastEditTime: 2023-09-30 17:30:01
  * @FilePath: /EndoSAM/README.md
  * @Description: 
  * I Love IU
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-- Download (using ```wget``` or manual way) the SAM model checkpoint and place it into ```ckpt/sam```
+- Download (using ```wget``` or manual way) the SAM model checkpoint and place it into ```sam```folder
 Click the links below to download the checkpoint for the corresponding model type.
 
     - **`default` or `vit_h`: [ViT-H SAM model.](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)**

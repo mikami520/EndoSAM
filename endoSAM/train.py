@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 17:06:09
+LastEditTime: 2023-09-30 17:29:40
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     valid_loader = DataLoader(valid_dataset, batch_size=cfg.val_bs, shuffle=True, num_workers=cfg.num_workers)
 
     logger.info("Load Model-Specific Parameters")
-    sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../ckpt/sam/{cfg.model.model_name}',customized=cfg.model.model_customized)
+    sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../sam/{cfg.model.model_name}',customized=cfg.model.model_customized)
     model = EndoSAMAdapter(device, cfg.model.class_num, sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder, num_token=cfg.num_token).to(device)
     lr = cfg.opt_params.lr_default
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
