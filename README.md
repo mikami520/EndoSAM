@@ -2,8 +2,8 @@
  * @Author: Chris Xiao yl.xiao@mail.utoronto.ca
  * @Date: 2023-09-12 22:10:18
  * @LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
- * @LastEditTime: 2023-09-30 17:31:03
- * @FilePath: /EndoSAM/README.md
+ * @LastEditTime: 2023-09-30 17:34:32
+ * @FilePath: /undefined/home/iu/Desktop/EndoSAM/README.md
  * @Description: 
  * I Love IU
  * Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
@@ -26,8 +26,7 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-- Download (using ```wget``` or manual way) the SAM model checkpoint and place it into ```sam_weights```folder
-Click the links below to download the checkpoint for the corresponding model type.
+- Download (using ```wget``` or manual way) the SAM model checkpoint and place it into ```sam_weights```folder, click the links below to download the checkpoint for the corresponding model type.
 
     - **`default` or `vit_h`: [ViT-H SAM model.](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)**
     - `vit_l`: [ViT-L SAM model.](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth)
@@ -44,7 +43,7 @@ Even though this is the fine-tune work, it requires a large GPU RAM. **Use suita
     - Batch Size 4 -> 21 GB RAM
     - Batch Size 8 -> 33 GB RAM
 
-The ```training checkpoints```,```best model```,```loss plots```and```log files``` will be saved in the```log_folder```,```model_folder```,```ckpt_folder``` and ```plot_folder```you provide in the config file.
+The ```training checkpoints, best model, loss plots and log files``` will be saved in the```log_folder```, ```model_folder```, ```ckpt_folder``` and ```plot_folder```you provide in the config file respectively.
 ## Inference
 ```
 python test.py --cfg ../config/finetune.yaml
