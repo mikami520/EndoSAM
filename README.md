@@ -2,7 +2,7 @@
  * @Author: Chris Xiao yl.xiao@mail.utoronto.ca
  * @Date: 2023-09-12 22:10:18
  * @LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
- * @LastEditTime: 2023-09-16 22:34:39
+ * @LastEditTime: 2023-09-30 17:26:27
  * @FilePath: /EndoSAM/README.md
  * @Description: 
  * I Love IU
@@ -43,3 +43,10 @@ Even though this is the fine-tune work, it requires a large GPU RAM. **Use suita
     - Batch Size 2 -> 12 GB RAM
     - Batch Size 4 -> 21 GB RAM
     - Batch Size 8 -> 33 GB RAM
+
+The ```training checkpoints```,```best model```,```loss plots```and```log files``` will be saved in the```log_folder```,```model_folder```,```ckpt_folder``` and ```plot_folder```you provide in the config file.
+## Inference
+```
+python test.py --cfg ../config/finetune.yaml
+```
+The prediction results will be saved into the ```test_folder``` you provide in the config file.
