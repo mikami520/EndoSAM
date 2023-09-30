@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 17:29:23
+LastEditTime: 2023-09-30 17:31:36
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     test_dataset = EndoVisDataset(root_dir, ann_format=ann_format, img_format=img_format, mode='val', encoder_size=cfg.model.encoder_size)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=cfg.num_workers)
     
-    sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../sam/{cfg.model.model_name}',customized=cfg.model.model_customized)
+    sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../sam_weights/{cfg.model.model_name}',customized=cfg.model.model_customized)
     model = EndoSAMAdapter(device, cfg.model.class_num, sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder, num_token=cfg.num_token).to(device)
     weights = torch.load(os.path.join(model_exp_path,'model.pth'), map_location=device)['endosam_state_dict']
     model.load_state_dict(weights)
