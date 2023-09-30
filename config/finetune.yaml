@@ -34,12 +34,13 @@ val_iter: 5
 train_bs: 4 # 8
 val_bs: 4 # 8
 num_workers: 16
-num_token: 8
+num_token: 4
 
 # Logger
 log_folder: '../experiment/log'
 model_folder: '../experiment/model'
 ckpt_folder: '../experiment/checkpoint'
 plot_folder: '../experiment/plots'
+test_folder: '../inference'
 
 

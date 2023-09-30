@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 21:08:26
+LastEditTime: 2023-09-30 17:06:09
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -49,10 +49,10 @@ if __name__ == '__main__':
     root_dir = cfg.dataset.dataset_dir
     img_format = cfg.dataset.img_format
     ann_format = cfg.dataset.ann_format
-    model_path = os.path.join(cfg.model_folder)
-    log_path = os.path.join(cfg.log_folder)
-    ckpt_path = os.path.join(cfg.ckpt_folder)
-    plot_path = os.path.join(cfg.plot_folder)
+    model_path = cfg.model_folder
+    log_path = cfg.log_folder
+    ckpt_path = cfg.ckpt_folder
+    plot_path = cfg.plot_folder
     model_exp_path = os.path.join(model_path, exp)
     log_exp_path = os.path.join(log_path, exp)
     ckpt_exp_path = os.path.join(ckpt_path, exp)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         logger.info(f"Epoch {epoch+1}/{cfg.max_iter}:")
         losses = []
         model.train()
-        for img, ann in train_loader:
+        for img, ann, _ in train_loader:
             img = img.to(device)
             ann = ann.to(device).unsqueeze(1).long()
             ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
             model.eval()
             ious = []
             with torch.no_grad():
-                for img, ann in valid_loader:
+                for img, ann, _ in valid_loader:
                     img = img.to(device)
                     ann = ann.to(device).unsqueeze(1).long()
                     ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)

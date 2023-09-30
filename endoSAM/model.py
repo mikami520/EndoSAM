@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 21:07:27
+LastEditTime: 2023-09-30 16:56:23
 FilePath: /EndoSAM/endoSAM/model.py
 Description: EndoSAM model adapter 
 I Love IU
@@ -19,7 +19,7 @@ class EndoSAMAdapter(nn.Module):
                  sam_mask_encoder,
                  sam_prompt_encoder,
                  sam_mask_decoder,
-                 num_token=4,
+                 num_token=8,
                  ):
         super(EndoSAMAdapter, self).__init__()
         self.device = device

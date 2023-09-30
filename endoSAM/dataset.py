@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 19:26:18
+LastEditTime: 2023-09-30 17:09:36
 FilePath: /EndoSAM/endoSAM/dataset.py
 Description: EndoVisDataset class
 I Love IU
@@ -70,4 +70,4 @@ class EndoVisDataset(Dataset):
         ann = np.array(ann)
         ann[ann != 0] = 1
         
-        return img, ann
+        return img, ann, name
