@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 17:10:52
+LastEditTime: 2023-09-30 17:17:13
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -51,13 +51,13 @@ if __name__ == '__main__':
     
     make_if_dont_exist(test_exp_path)
     
-    test_dataset = EndoVisDataset(root_dir, ann_format=ann_format, img_format=img_format, mode='val', encoder_size=cfg.model.encoder_size)
+    test_dataset = EndoVisDataset(root_dir, ann_format=ann_format, img_format=img_format, mode='test', encoder_size=cfg.model.encoder_size)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=cfg.num_workers)
     
     sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder = sam_model_registry[cfg.model.model_type](checkpoint=f'../ckpt/sam/{cfg.model.model_name}',customized=cfg.model.model_customized)
     model = EndoSAMAdapter(device, cfg.model.class_num, sam_mask_encoder, sam_prompt_encoder, sam_mask_decoder, num_token=cfg.num_token).to(device)
-    weights = torch.load(os.path.join(model_exp_path,'model.pth'), map_location=device)
-    model.load_state_dict(weights['endosam_state_dict'])
+    weights = torch.load(os.path.join(model_exp_path,'model.pth'), map_location=device)['endosam_state_dict']
+    model.load_state_dict(weights)
     
     model.eval()
     
@@ -74,7 +74,7 @@ if __name__ == '__main__':
             pred = torch.argmax(pred, dim=1)
             numpy_pred = pred.cpu().detach().numpy()[0]
             numpy_pred[numpy_pred != 0] = 255
-            cv2.imwrite(os.path.join(test_exp_path, f'{name}.png'), numpy_pred.astype(np.uint8))
+            cv2.imwrite(os.path.join(test_exp_path, f'{name[0]}.png'), numpy_pred.astype(np.uint8))
     
     avg_iou = np.mean(ious, axis=0)
     print(f'average intersection over union of mask: {avg_iou}')
