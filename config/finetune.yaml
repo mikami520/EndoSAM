@@ -3,15 +3,15 @@ experiment_name: 'EndoSAM'
 # Model
 model:
   class_num: 2 # 20 + 1
-  model_customized: True
-  model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
-  model_name: 'sam_vit_h_4b8939.pth'
+  sam_model_customized: True
+  sam_model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
+  sam_model_dir: '/root/autodl-tmp/sam_weights/sam_vit_h_4b8939.pth'
   encoder_size: 1024  
 
 # Dataset
 dataset:
     class_names: ['background', 'instrument-clapster']
-    dataset_dir: '/home/iu/Desktop/EndoVis/all_data'
+    dataset_dir: '/root/autodl-tmp/all_data'
     img_format: 'jpg'
     ann_format: 'png'
 
@@ -28,20 +28,20 @@ opt_params:
   lr_default:  1e-4
 
 # Runner
-max_iter: 50
+max_iter: 1000
 val_iter: 5
 # Dataloader  
-train_bs: 4 # 8
-val_bs: 4 # 8
+train_bs: 8 # 8
+val_bs: 8 # 8
 test_bs: 1
-num_workers: 16
-num_token: 8
+num_workers: 24
+num_token: 4
 
 # Logger
-log_folder: '../experiment/log'
-model_folder: '../experiment/model'
-ckpt_folder: '../experiment/checkpoint'
-plot_folder: '../experiment/plots'
-test_folder: '../inference'
+log_folder: '/root/autodl-tmp/EndoSAM_experiment/log'
+model_folder: '/root/autodl-tmp/EndoSAM_experiment/model'
+ckpt_folder: '/root/autodl-tmp/EndoSAM_experiment/checkpoint'
+plot_folder: '/root/autodl-tmp/EndoSAM_experiment/plots'
+test_folder: '/root/autodl-tmp/EndoSAM_experiment/inference'
 
 
