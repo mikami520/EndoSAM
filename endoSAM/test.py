@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
-LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 17:31:36
+LastEditors: mikami520 yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-09-30 23:18:15
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -75,7 +75,6 @@ if __name__ == '__main__':
             numpy_pred = pred.cpu().detach().numpy()[0]
             numpy_pred[numpy_pred != 0] = 255
             cv2.imwrite(os.path.join(test_exp_path, f'{name[0]}.png'), numpy_pred.astype(np.uint8))
-            exit(0)
     
     avg_iou = np.mean(ious, axis=0)
     print(f'average intersection over union of mask: {avg_iou}')
