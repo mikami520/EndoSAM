@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
 LastEditors: mikami520 yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 23:18:15
+LastEditTime: 2023-09-30 23:21:35
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     
     ious = []
     with torch.no_grad():
-        for img, ann, name in test_loader:
+        for img, ann, name, img_ori in test_loader:
             img = img.to(device)
             ann = ann.to(device).unsqueeze(1).long()
             ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
