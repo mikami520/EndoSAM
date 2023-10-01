@@ -10,7 +10,7 @@ model:
 
 # Dataset
 dataset:
-    class_names: ['background', instrument-clapster']
+    class_names: ['background', 'instrument-clapster']
     dataset_dir: '/home/iu/Desktop/EndoVis/all_data'
     img_format: 'jpg'
     ann_format: 'png'
