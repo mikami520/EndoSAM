@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
-LastEditors: mikami520 yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 23:21:28
+LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-10-02 16:11:23
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     train_losses = []
     val_values = []
-    best_val_iou = -np.inf
+    best_val_loss = np.inf
     max_iter = cfg.max_iter
     val_iter = cfg.val_iter
     start_epoch = 0
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         ckpt = torch.load(os.path.join(ckpt_exp_path, 'ckpt.pth'), map_location=device)
         optimizer.load_state_dict(ckpt['optimizer'])
         model.load_state_dict(ckpt['weights'])
-        best_val_iou = ckpt['best_val_iou']
+        best_val_loss = ckpt['best_val_loss']
         train_losses = ckpt['train_losses']
         val_values = ckpt['val_values']
         lr = optimizer.param_groups[0]['lr']
@@ -123,32 +123,32 @@ if __name__ == '__main__':
         
         if epoch % cfg.val_iter == 0:
             model.eval()
-            ious = []
+            val_losses = []
             with torch.no_grad():
                 for img, ann, _, _ in valid_loader:
                     img = img.to(device)
                     ann = ann.to(device).unsqueeze(1).long()
                     ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
                     pred, pred_quality = model(img)
-                    iou = jaccard(ann, pred)
-                    ious.append(iou.item())
+                    loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
+                    val_losses.append(loss.item())
             
-            avg_iou = np.mean(ious, axis=0)
-            logger.info(f"\tvalidation iou: {avg_iou}")
-            val_values.append([epoch+1, avg_iou])
-            if avg_iou > best_val_iou:
-                best_val_iou = avg_iou
+            avg_val_loss = np.mean(val_losses, axis=0)
+            logger.info(f"\tvalidation iou: {avg_val_loss}")
+            val_values.append([epoch+1, avg_val_loss])
+            if avg_val_loss < best_val_loss:
+                best_val_loss = avg_val_loss
                 logger.info(f"\tsave best endosam model")
                 torch.save({
                     'epoch': epoch,
-                    'best_val_iou': best_val_iou,
+                    'best_val_loss': best_val_loss,
                     'train_losses': train_losses,
                     'val_values': val_values,
                     'endosam_state_dict': model.state_dict(),
                     'optimizer': optimizer.state_dict(),
                 }, os.path.join(model_exp_path, 'model.pth'))
         save_dir = os.path.join(ckpt_exp_path, 'ckpt.pth')
-        save_checkpoint(model, optimizer, epoch, best_val_iou, train_losses, val_values, save_dir)
+        save_checkpoint(model, optimizer, epoch, best_val_loss, train_losses, val_values, save_dir)
         plot_progress(logger, plot_exp_path, train_losses, val_values, 'loss')
     
     

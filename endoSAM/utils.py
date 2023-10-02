@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-27 19:28:24
+LastEditTime: 2023-10-02 16:10:45
 FilePath: /EndoSAM/endoSAM/utils.py
 Description: EndoSAM utilities functions 
 I Love IU
@@ -54,10 +54,10 @@ def plot_progress(logger, save_dir, train_loss, val_loss, name):
         logger.info(f"failed to plot {name} training progress")
 
 
-def save_checkpoint(adapter_model, optimizer, epoch, best_val_iou, train_losses, val_values, save_dir):
+def save_checkpoint(adapter_model, optimizer, epoch, best_val_loss, train_losses, val_values, save_dir):
     torch.save({
                 'epoch': epoch,
-                'best_val_iou': best_val_iou,
+                'best_val_loss': best_val_loss,
                 'train_losses': train_losses,
                 'val_values': val_values,
                 'weights': adapter_model.state_dict(),
