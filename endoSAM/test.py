@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-10-02 20:56:30
+LastEditTime: 2023-10-02 21:24:55
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -103,7 +103,7 @@ if __name__ == '__main__':
                 pass
             cv2.imwrite(os.path.join(test_exp_mask_path, f'{name[0]}.png'), numpy_pred.astype(np.uint8))
             cv2.imwrite(os.path.join(test_exp_overlay_path, f'{name[0]}.png'), result)
-    
+            
     with open(os.path.join(test_exp_path, 'mask_ious.json'), 'w') as f:
         json.dump(iou_dict, f, indent=4, sort_keys=False)
     

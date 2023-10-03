@@ -5,13 +5,13 @@ model:
   class_num: 2 # 20 + 1
   sam_model_customized: True
   sam_model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
-  sam_model_dir: '/root/autodl-tmp/sam_weights/sam_vit_h_4b8939.pth'
+  sam_model_dir: '/home/iu/Desktop/sam_weights/sam_vit_h_4b8939.pth'
   encoder_size: 1024  
 
 # Dataset
 dataset:
     class_names: ['background', 'instrument-clapster']
-    dataset_dir: '/root/autodl-tmp/all_data'
+    dataset_dir: '/home/iu/Desktop/EndoVis/all_data'
     img_format: 'jpg'
     ann_format: 'png'
 
@@ -38,10 +38,10 @@ num_workers: 24
 num_token: 4
 
 # Logger
-log_folder: '/root/autodl-tmp/EndoSAM_experiment/log'
-model_folder: '/root/autodl-tmp/EndoSAM_experiment/model'
-ckpt_folder: '/root/autodl-tmp/EndoSAM_experiment/checkpoint'
-plot_folder: '/root/autodl-tmp/EndoSAM_experiment/plots'
-test_folder: '/root/autodl-tmp/EndoSAM_experiment/inference'
+log_folder: '/home/iu/Desktop/EndoSAM_experiment/log'
+model_folder: '/home/iu/Desktop/EndoSAM_experiment/model'
+ckpt_folder: '/home/iu/Desktop/EndoSAM_experiment/checkpoint'
+plot_folder: '/home/iu/Desktop/EndoSAM_experiment/plots'
+test_folder: '/home/iu/Desktop/EndoSAM_experiment/inference'
 
 
