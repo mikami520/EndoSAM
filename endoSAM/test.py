@@ -1,8 +1,8 @@
 '''
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-30 16:14:13
-LastEditors: mikami520 yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-09-30 23:44:34
+LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
+LastEditTime: 2023-10-02 20:06:03
 FilePath: /EndoSAM/endoSAM/test.py
 Description: fine-tune inference script
 I Love IU
@@ -20,6 +20,7 @@ import numpy as np
 from segment_anything.build_sam import sam_model_registry
 from loss import jaccard
 import cv2
+import json
 
 
 def parse_command():
@@ -61,6 +62,7 @@ if __name__ == '__main__':
     
     model.eval()
     
+    iou_dict = {}
     ious = []
     with torch.no_grad():
         for img, ann, name, img_rgb in test_loader:
@@ -69,8 +71,12 @@ if __name__ == '__main__':
             ann = ann.to(device).unsqueeze(1).long()
             ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
             pred, pred_quality = model(img)
-            iou = jaccard(ann, pred)
-            ious.append(iou.item())
+            mask_iou = np.nan
+            if torch.unique(pred).size()[0] > 1:
+                iou = jaccard(ann, pred)
+                mask_iou = iou.item()
+            iou_dict[name[0]] = mask_iou
+            ious.append(mask_iou)
             pred = torch.argmax(pred, dim=1)
             numpy_pred = pred.cpu().detach().numpy().squeeze()
             numpy_pred[numpy_pred != 0] = 255
@@ -94,5 +100,9 @@ if __name__ == '__main__':
             # cv2.imwrite(os.path.join(test_exp_path, f'{name[0]}.png'), numpy_pred.astype(np.uint8))
             cv2.imwrite(os.path.join(test_exp_path, f'{name[0]}.png'), result)
     
+    with open(os.path.join(test_exp_path, 'mask_ious.json'), 'w') as f:
+        json.dump(iou_dict, f, indent=4, sort_keys=False)
+    
+    f.close()
     avg_iou = np.mean(ious, axis=0)
     print(f'average intersection over union of mask: {avg_iou}')
