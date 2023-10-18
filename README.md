@@ -9,7 +9,7 @@
  * Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 -->
 # EndoSAM
-Fine-tune for endoscope clapster segmentation
+Fine-tune for endoscope clapster segmentation (adapted from [SurgicalSAM](https://github.com/wenxi-yue/SurgicalSAM) but provided all scripts for fine-tune)
 
 ## Installation (tested on Ubuntu 20.04.6 LTS x86_64)
 ```
