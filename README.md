@@ -37,7 +37,7 @@ cd endoSAM
 python train.py --cfg ../config/finetune.yaml
 ```
 - GPU RAM Requirement\
-Even though this is the fine-tune work, it requires a large GPU RAM. **Use suitable batch size based on the VRAM you have**
+Even though this is the fine-tune work, it requires a large GPU RAM. We tested on the [EndoVis2017](https://endovissub2017-roboticinstrumentsegmentation.grand-challenge.org/) [1] and [EndoVis2018](https://endovissub2018-roboticscenesegmentation.grand-challenge.org/) [2] Dataset and image resolution is 1024 x 1024 with initial processing for the SAM. **Use suitable batch size based on the VRAM you have**
     - Batch Size 1 -> 6 GB RAM
     - Batch Size 2 -> 12 GB RAM
     - Batch Size 4 -> 21 GB RAM
@@ -49,3 +49,8 @@ The ```training checkpoints, best model, loss plots and log files``` will be sav
 python test.py --cfg ../config/finetune.yaml
 ```
 The prediction results will be saved into the ```test_folder``` you provide in the config file.
+
+## Reference
+[1] Allan, M.; Shvets, A.; Kurmann, T.; Zhang, Z.; Duggal, R.; Su, Y.-H.; Rieke, N.; Laina, I.; Kalavakonda, N.; Bodenstedt, S.; Herrera, L.; Li, W.; Iglovikov, V.; Luo, H.; Yang, J.; Stoyanov, D.; Maier-Hein, L.; Speidel, S.; and Azizian, M. 2019. 2017 Robotic Instrument Segmentation Challenge. arXiv:1902.06426.
+
+[2] Allan, M.; Kondo, S.; Bodenstedt, S.; Leger, S.; Kadkhodamohammadi, R.; Luengo, I.; Fuentes, F.; Flouty, E.; Mohammed, A.; Pedersen, M.; Kori, A.; Alex, V.; Krishnamurthi, G.; Rauber, D.; Mendel, R.; Palm, C.; Bano, S.; Saibro, G.; Shih, C.-S.; Chiang, H.-A.; Zhuang, J.; Yang, J.; Iglovikov, V.; Dobrenkii, A.; Reddiboina, M.; Reddy, A.; Liu, X.; Gao, C.; Unberath, M.; Kim, M.; Kim, C.; Kim, C.; Kim, H.; Lee, G.; Ullah, I.; Luna, M.; Park, S. H.; Azizian, M.; Stoyanov, D.; Maier-Hein, L.; and Speidel, S. 2020. 2018 Robotic Scene Segmentation Challenge. arXiv:2001.11190.
