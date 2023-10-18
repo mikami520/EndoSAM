@@ -5,7 +5,7 @@ model:
   class_num: 2 # 20 + 1
   sam_model_customized: True
   sam_model_type: 'default' # ['default' 'vit_h', 'vit_b', 'vit_l']
-  sam_model_dir: '/home/iu/Desktop/sam_weights/sam_vit_h_4b8939.pth'
+  sam_model_dir: '/home/iu/Desktop/sam_vit_h_4b8939.pth'
   encoder_size: 1024  
 
 # Dataset
@@ -28,13 +28,13 @@ opt_params:
   lr_default:  1e-4
 
 # Runner
-max_iter: 1000
+max_iter: 1
 val_iter: 5
 # Dataloader  
-train_bs: 8 # 8
-val_bs: 8 # 8
+train_bs: 2 # 8
+val_bs: 2 # 8
 test_bs: 1
-num_workers: 24
+num_workers: 20
 num_token: 4
 
 # Logger

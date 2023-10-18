@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-10-02 17:22:51
+LastEditTime: 2023-10-18 00:34:42
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -23,6 +23,7 @@ from model import EndoSAMAdapter
 import numpy as np
 from segment_anything.build_sam import sam_model_registry
 from loss import ce_loss, mse_loss, jaccard
+from tqdm import tqdm
 
 
 def parse_command():
@@ -106,16 +107,18 @@ if __name__ == '__main__':
         logger.info(f"Epoch {epoch+1}/{cfg.max_iter}:")
         losses = []
         model.train()
-        for img, ann, _, _ in train_loader:
-            img = img.to(device)
-            ann = ann.to(device).unsqueeze(1).long()
-            ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
-            optimizer.zero_grad()
-            pred, pred_quality = model(img)
-            loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
-            loss.backward()
-            optimizer.step()
-            losses.append(loss.item())
+        with tqdm(train_loader, unit='batch', desc='Training') as tdata:
+            for img, ann, _, _ in tdata:
+                img = img.to(device)
+                ann = ann.to(device).unsqueeze(1).long()
+                ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
+                optimizer.zero_grad()
+                pred, pred_quality = model(img)
+                loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
+                tdata.set_postfix(loss=loss.item())
+                loss.backward()
+                optimizer.step()
+                losses.append(loss.item())
 
         avg_loss = np.mean(losses, axis=0)
         logger.info(f"\ttraining loss: {avg_loss}")
@@ -125,13 +128,15 @@ if __name__ == '__main__':
             model.eval()
             losses = []
             with torch.no_grad():
-                for img, ann, _, _ in valid_loader:
-                    img = img.to(device)
-                    ann = ann.to(device).unsqueeze(1).long()
-                    ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
-                    pred, pred_quality = model(img)
-                    loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
-                    losses.append(loss.item())
+                with tqdm(valid_loader, unit='batch', desc='Validation') as tdata:
+                    for img, ann, _, _ in tdata:
+                        img = img.to(device)
+                        ann = ann.to(device).unsqueeze(1).long()
+                        ann = one_hot_embedding_3d(ann, class_num=cfg.model.class_num)
+                        pred, pred_quality = model(img)
+                        loss = cfg.losses.ce.weight * ce_loss(ann, pred) + cfg.losses.mse.weight * mse_loss(ann, pred)
+                        tdata.set_postfix(loss=loss.item())
+                        losses.append(loss.item())
             
             avg_loss = np.mean(losses, axis=0)
             logger.info(f"\tvalidation loss: {avg_loss}")
