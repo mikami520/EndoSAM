@@ -15,7 +15,7 @@ Fine-tune for endoscope clapster segmentation (adapted from [SurgicalSAM](https:
 ```
 git clone https://github.com/mikami520/EndoSAM.git
 cd EndoSAM
-conda env create -f environment.yaml
+conda env create -f environment.yml
 conda activate sam
 ```
 If conda cannot install successfully, try
