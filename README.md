@@ -2,15 +2,23 @@
  * @Author: Chris Xiao yl.xiao@mail.utoronto.ca
  * @Date: 2023-09-12 22:10:18
  * @LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
- * @LastEditTime: 2023-09-30 17:34:32
- * @FilePath: /undefined/home/iu/Desktop/EndoSAM/README.md
+ * @LastEditTime: 2023-12-09 17:15:37
+ * @FilePath: /EndoSAM/README.md
  * @Description: 
  * I Love IU
  * Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 -->
 # EndoSAM
 Fine-tune for endoscope clapster segmentation (adapted from [SurgicalSAM](https://github.com/wenxi-yue/SurgicalSAM) but provided all scripts for fine-tune)
+<!-- TOC -->
 
+- [EndoSAM](#endosam)
+    - [Installation tested on Ubuntu 20.04.6 LTS x86_64](#installation-tested-on-ubuntu-20046-lts-x86_64)
+    - [Usage](#usage)
+    - [Inference](#inference)
+    - [Reference](#reference)
+
+<!-- /TOC -->
 ## Installation (tested on Ubuntu 20.04.6 LTS x86_64)
 ```
 git clone https://github.com/mikami520/EndoSAM.git
