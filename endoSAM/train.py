@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-11-21 19:19:04
+LastEditTime: 2023-12-12 16:18:58
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -22,7 +22,7 @@ import torch
 from model import EndoSAMAdapter
 import numpy as np
 from segment_anything.build_sam import sam_model_registry
-from loss import ce_loss, mse_loss, jaccard
+from loss import ce_loss, mse_loss
 from tqdm import tqdm
 
 

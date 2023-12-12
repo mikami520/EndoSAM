@@ -2,13 +2,12 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 18:21:41
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-10-02 20:05:33
+LastEditTime: 2023-12-12 16:19:16
 FilePath: /EndoSAM/endoSAM/loss.py
 Description: loss functions
 I Love IU
 Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved. 
 '''
-import torch
 import torch.nn as nn
 from torchmetrics.classification import JaccardIndex
 

@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 19:47:31
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-10-02 17:26:32
+LastEditTime: 2023-12-12 16:18:36
 FilePath: /EndoSAM/endoSAM/utils.py
 Description: EndoSAM utilities functions 
 I Love IU
@@ -15,7 +15,6 @@ import shutil
 import logging
 from torch.nn import functional as F
 import torch
-import torch.nn as nn
 from torchvision.transforms.functional import resize, to_pil_image  # type: ignore
 from copy import deepcopy
 import matplotlib.pyplot as plt

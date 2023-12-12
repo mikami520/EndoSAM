@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-16 17:41:29
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-10-02 20:52:54
+LastEditTime: 2023-12-12 16:19:32
 FilePath: /EndoSAM/endoSAM/dataset.py
 Description: EndoVisDataset class
 I Love IU
@@ -11,7 +11,6 @@ Copyright (c) 2023 by Chris Xiao yl.xiao@mail.utoronto.ca, All Rights Reserved.
 from torch.utils.data import Dataset
 import os 
 import glob
-import re 
 import numpy as np 
 import cv2
 from utils import ResizeLongestSide, preprocess
