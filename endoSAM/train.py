@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-12-12 16:18:58
+LastEditTime: 2023-12-17 00:56:06
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -24,7 +24,14 @@ import numpy as np
 from segment_anything.build_sam import sam_model_registry
 from loss import ce_loss, mse_loss
 from tqdm import tqdm
+import wget
 
+COMMON_MODEL_LINKS={
+    'default': 'https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth',
+    'vit_h': 'https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth',
+    'vit_l': 'https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth',
+    'vit_b': 'https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth'
+}
 
 def parse_command():
     parser = argparse.ArgumentParser()
@@ -35,16 +42,28 @@ def parse_command():
 
 if __name__ == '__main__':
     args = parse_command()
-    cfg = args.cfg
+    cfg_path = args.cfg
     resume = args.resume
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    if cfg is not None:
-        if os.path.exists(cfg):
-            cfg = OmegaConf.load(cfg)
+    if cfg_path is not None:
+        if os.path.exists(cfg_path):
+            cfg = OmegaConf.load(cfg_path)
         else:
-            raise FileNotFoundError(f'config file {cfg} not found')
+            raise FileNotFoundError(f'config file {cfg_path} not found')
     else:
         raise ValueError('config file not specified')
+
+    
+    if 'sam_model_dir' not in OmegaConf.to_container(cfg)['model'].keys() or OmegaConf.is_missing(cfg.model, 'sam_model_dir') or not os.path.exists(cfg.model.sam_model_dir):
+        print("Didn't find SAM Checkpoint, downloading from Facebook AI")
+        parent_dir = '/'.join(os.getcwd().split('/')[:-1])
+        model_dir = os.path.join(parent_dir, 'sam_ckpts')
+        make_if_dont_exist(model_dir, overwrite=True)
+        checkpoint = os.path.join(model_dir, COMMON_MODEL_LINKS[cfg.model.sam_model_type].split('/')[-1])
+        wget.download(COMMON_MODEL_LINKS[cfg.model.sam_model_type], checkpoint)
+        OmegaConf.update(cfg, 'model.sam_model_dir', checkpoint)
+        OmegaConf.save(cfg, cfg_path)
+        
 
     exp = cfg.experiment_name
     root_dir = cfg.dataset.dataset_dir
