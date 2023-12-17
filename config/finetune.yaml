@@ -3,7 +3,7 @@ model:
   class_num: 2
   sam_model_customized: true
   sam_model_type: default
-  sam_model_dir: /home/iu/Desktop/EndoSAM/sam_ckpts/sam_vit_h_4b8939.pth
+  sam_model_dir: /home/iu/Desktop/EndoSAM/sam_ckpts/default.pth
   encoder_size: 1024
 dataset:
   class_names:

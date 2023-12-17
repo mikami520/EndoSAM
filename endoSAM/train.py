@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-12-17 01:51:11
+LastEditTime: 2023-12-17 18:22:47
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
