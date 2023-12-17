@@ -2,7 +2,7 @@
 Author: Chris Xiao yl.xiao@mail.utoronto.ca
 Date: 2023-09-11 18:27:02
 LastEditors: Chris Xiao yl.xiao@mail.utoronto.ca
-LastEditTime: 2023-12-17 00:56:06
+LastEditTime: 2023-12-17 01:51:11
 FilePath: /EndoSAM/endoSAM/train.py
 Description: fine-tune training script
 I Love IU
@@ -55,16 +55,15 @@ if __name__ == '__main__':
 
     
     if 'sam_model_dir' not in OmegaConf.to_container(cfg)['model'].keys() or OmegaConf.is_missing(cfg.model, 'sam_model_dir') or not os.path.exists(cfg.model.sam_model_dir):
-        print("Didn't find SAM Checkpoint, downloading from Facebook AI")
+        print("Didn't find SAM Checkpoint. Downloading from Facebook AI...")
         parent_dir = '/'.join(os.getcwd().split('/')[:-1])
         model_dir = os.path.join(parent_dir, 'sam_ckpts')
         make_if_dont_exist(model_dir, overwrite=True)
-        checkpoint = os.path.join(model_dir, COMMON_MODEL_LINKS[cfg.model.sam_model_type].split('/')[-1])
+        checkpoint = os.path.join(model_dir, cfg.model.sam_model_type+'.pth')
         wget.download(COMMON_MODEL_LINKS[cfg.model.sam_model_type], checkpoint)
         OmegaConf.update(cfg, 'model.sam_model_dir', checkpoint)
         OmegaConf.save(cfg, cfg_path)
         
-
     exp = cfg.experiment_name
     root_dir = cfg.dataset.dataset_dir
     img_format = cfg.dataset.img_format
